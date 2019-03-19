@@ -21,7 +21,10 @@ CURRENT_EMPLOYEES_DATA = 'CURRENT_EMPLOYEES_DATA.txt'
 G_BEFORE_PD = "G_BEFORE_PD.csv"
 sheets = Sheets.from_files('credentials.json')
 GOOGLE_URL = "https://docs.google.com/spreadsheets/d/1GO5J7mxh3wAmErteJV9qrfGCd7Zln-P4KmjtgaVHddw/edit#gid=0"
-API_KEY ='spbdxdqepugjhgeh4kbrn6t2sz7jfytm' 
+
+with open('TimeStation_Key.txt', "r") as file_open:
+    API_KEY = file_open.read()
+
 CODE = 37
 GOOGLE_DATA = 'google_data.xlsx'
 ############################################################################################################
@@ -45,9 +48,8 @@ def open_file(path):
 class GettingDataForReport:
 
     def __init__(self):
-        pass
-        # self.google_sheet_process()
-        # self.get_data(CURRENT_EMPLOYEES_DATA)
+        self.google_sheet_process()
+        self.get_data(CURRENT_EMPLOYEES_DATA)
 
     def google_sheet_process(self):
 
@@ -246,7 +248,3 @@ if __name__ == '__main__':
 
     active = CreatedReport()
     active.run()
-    # active.run()
-
-
-
