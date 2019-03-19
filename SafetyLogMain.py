@@ -17,15 +17,15 @@ current_os = platform.system()
 global locations
 
 ###################################### settings app ########################################################
-CURRENT_EMPLOYEES_DATA = 'CURRENT_EMPLOYEES_DATA.txt'
-G_BEFORE_PD = "G_BEFORE_PD.csv"
-sheets = Sheets.from_files('credentials.json')
+
 with open("Google_url.txt", "r") as file_to_open:
     GOOGLE_URL = file_to_open.read() 
-
 with open('TimeStation_Key.txt', "r") as file_open:
     API_KEY = file_open.read()
 
+CURRENT_EMPLOYEES_DATA = 'CURRENT_EMPLOYEES_DATA.txt'
+G_BEFORE_PD = "G_BEFORE_PD.csv"
+sheets = Sheets.from_files('credentials.json')
 CODE = 37
 GOOGLE_DATA = 'google_data.xlsx'
 ############################################################################################################
