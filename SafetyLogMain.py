@@ -49,6 +49,7 @@ def open_file(path):
 class GettingDataForReport:
 
     def __init__(self):
+
         self.google_sheet_process()
         self.get_data(CURRENT_EMPLOYEES_DATA)
 
@@ -65,7 +66,6 @@ class GettingDataForReport:
         def convert_time(x):
             v = datetime.strptime(x, '%Y-%m-%d')
             return v
-
         try:
             years_ago = x - relativedelta(years=-5)
             return years_ago.strftime('%Y-%m-%d')
@@ -139,7 +139,7 @@ class GettingDataForReport:
                 dict_location[item[0].lower()] = item[1]
 
 
-        dict_full_data = {}   # will be fill in processing data
+        dict_full_data = {}                                              # will be fill in processing data
         for device, names in dict_employees.items():
             for name in names:
                 if name[0] not in db.keys():
@@ -161,9 +161,15 @@ class GettingDataForReport:
 class CreatedReport:
 
     def __init__(self):
-
+        self.erase_folders(locations)
         self.active = GettingDataForReport()
         self.dict_full_data = self.active.run()
+
+    def erase_folders(self, folder):
+        folder_to_empty = os.path.join(DIR_PATH, folder)
+        filelist = [ f for f in os.listdir(folder_to_empty)]
+        for item in filelist:
+            os.remove(os.path.join(folder_to_empty, item))
 
     def display_info(self):
         ''' is created to see the infomation recolected without creating the sheets'''
@@ -211,6 +217,7 @@ class CreatedReport:
         for device_name, list_items in self.dict_full_data.items():
 
             None if os.path.isdir(locations) else os.mkdir(locations) #  check for creating folders
+
             wb = openpyxl.Workbook()
             ws = wb.active
             file_out_name = os.path.join(f"{locations}", f'{device_name}.xlsx')
