@@ -30,28 +30,33 @@ def open_file(path):
 
 
 class GettingDataForReport:
+    ''' this gets the informatin for timestation Server using pandas to get request 
+    - gets =  data from timestation 
+    - returns = pandas dataframe with names filtered by location and Status "IN" '''
 
     def __init__(self):
         self.URL = URL
-        self.raw_current = pd.read_csv('CURRENT_EMPLOYEES_DATA.txt')
+        self.raw_current = pd.read_csv(self.URL)
         self.current_in = self.raw_current[self.raw_current['Status'].str.contains('In')]
     
     def run(self, location): 
-
         filter_data = self.current_in[self.current_in['Current Department'].str.contains(location)]
         return filter_data
 
 
 class CreatedReport:
-
+    ''' creates the report for according to OSHA standards
+    -gets: Pandas dataframe, location
+    -returns: Nothing
+    '''
     def __init__(self, data, location):
-
-
         self.location = location
         self.data = data.to_dict('index')
         self.erase_folders(self.location)
 
     def erase_folders(self, folder):
+        ''' this ensure that data inside the folder are erase before the program add new files
+        - get: folder name - string '''
 
         folder_to_empty = os.path.join(DIR_PATH, folder)
         if os.path.isdir(folder_to_empty):
@@ -60,12 +65,16 @@ class CreatedReport:
                 os.remove(os.path.join(folder_to_empty, item))
 
     def full_border(self):
+        ''' style - full boders for excel sheet by square'''
+
         border_style = Border(left=Side(border_style='thin'), right=Side(border_style='thin'),
                               top=Side(border_style='thin'), bottom=Side(border_style='thin'))
         return border_style
 
     def heather(self, ws, device, location, attendees=0):
-
+        ''' format the heather of the page that will be created 
+        -gets: Device(foreman name)-string, location-string, attendees-int '''
+        
         ws.merge_cells("A1:E1")
         ws.merge_cells("C2:D2")
         ws.merge_cells("C3:D3")
@@ -75,6 +84,7 @@ class CreatedReport:
         ws['A2'] = "Project"
         ws['A3'] = "Contractor"
         ws['A4'] = "TRADE"
+        ws['B4'] = 'IBK Construction Group'
         ws['C2'] = "Date/Time"
         ws['C3'] = "Number of Attendees"
         ws['C4'] = "Foreman:"
@@ -117,12 +127,36 @@ class CreatedReport:
         ws['E4'].alignment = Alignment(horizontal='center')
 
     def body(self, ws, employees_list):
+        ''' format and edit the body of the page
+        -gets: ws-openpyxl page activated, employees_list -  list of names of employees
+        -return: count - int, name_location[0] - string '''
+
+    
         # --------------------------------- right column  ---------------------------------------------------
         ws.merge_cells("A5:B8")
         ws['A5'] = '''SAFETY DISCUSSION
          (REVIEW ACTIVITIES/TASK TO BE PERFORMED INCLUDING SAFETY CONCERNS OR RISK WITH WORK)'''
         ws['A5'].alignment = Alignment(wrap_text=True, horizontal='center', vertical='center')
         ws['A5'].border = self.full_border()
+        
+        square = '\u25A2'
+    
+        ws['A9'] = square+ ' Fall Protection:'
+        ws['A11'] = square+ ' Control Access Zone:'
+        ws['A13'] = square+ ' Proper use of pneumatic tools'
+        ws['A15'] = square+ ' Safety of Handset Forms installation.'
+        ws['A17'] = square+ ' Safety of Plywood installation.'
+        ws['A19'] = square+ ' Ergonomics'
+        ws['A21'] = square+ ' hazardous Materials'
+        ws['A23'] = square+ ' OSHA Silica Standard'
+        ws['A25'] = square+ ' Use of Proper PPE:'
+        ws['A27'] = square+ ' Proper use of Electrical Tools'
+        ws['A29'] = square+ ' Safety of TITAN Installation.'
+        ws['A31'] = square+ ' Safety of Rebar installation.'
+        ws['A33'] = square+ ' Safety of Hosting and Lifting.'
+        ws['A35'] = square+ ' Unusual Weather Conditions.'
+
+
         for x in range(9, 42):
             ws.merge_cells(f"A{x}:B{x}")
             ws[f'A{x}'].border = self.full_border()
@@ -178,7 +212,7 @@ class CreatedReport:
     def general_style(self, ws):
 
         ws.column_dimensions['A'].width = 10
-        ws.column_dimensions['B'].width = 20
+        ws.column_dimensions['B'].width = 25
         ws.column_dimensions['C'].width = 3
         ws.column_dimensions['D'].width = 13
         ws.column_dimensions['E'].width = 20
@@ -190,6 +224,8 @@ class CreatedReport:
             ws[f'A{y-1}'].font = Font(size=10)
 
     def convert_path_to_linux(self, device):
+        ''' for linux system, saving files with no space is better.
+        this clean the name of files before there are save.'''
         
         device = device.strip()
         device = device.replace(' ', '_')
@@ -216,8 +252,6 @@ class CreatedReport:
             wb.close()
 
 
-
-
 def convert_to_pdf(location):
     file_dir = os.path.abspath(os.path.join(DIR_PATH, location))
     list_file_names = os.listdir(file_dir)
@@ -227,14 +261,13 @@ def convert_to_pdf(location):
         os.system(f'libreoffice --convert-to pdf {fullname} --outdir {file_dir}')
 
 
-
 if __name__ == "__main__":
 
-    # getting_data = GettingDataForReport()
+    getting_data = GettingDataForReport()
     for location in LIST_LOCATIONS:
-        # data = getting_data.run(location=location)
-        # active = CreatedReport(data=data, location=location)
-        # active.run()
+        data = getting_data.run(location=location)
+        active = CreatedReport(data=data, location=location)
+        active.run()
         convert_to_pdf(location=location)
 
 
