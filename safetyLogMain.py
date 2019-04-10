@@ -1,9 +1,10 @@
-# !/usr/bin/env python3
-# -*- coding: utf8 -*-
+
 import os, platform, datetime, subprocess
 import pandas as pd 
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side
+from Email_preparer import send_email
+
 
 ######################## settings ##########################
 with open('TimeStation_Key.txt', 'r') as open_file:
@@ -19,6 +20,7 @@ LIST_LOCATIONS = '262 511 28 199'.split()
 DIR_PATH = os.path.abspath(os.path.dirname(__file__))
 current_os = platform.system()
 clean_screen = os.system('cls') if current_os == "Windows" else os.system('clear')
+
 def open_file(path):
     if platform.system() == "Windows":
         os.startfile(path)
@@ -46,13 +48,14 @@ class GettingDataForReport:
 
 class CreatedReport:
     ''' creates the report for according to OSHA standards
-    -gets: Pandas dataframe, location
-    -returns: Nothing
-    '''
+    - gets: Pandas dataframe, location
+    - returns: Nothing '''
+    
     def __init__(self, data, location):
         self.location = location
-        self.data = data.to_dict('index')
         self.erase_folders(self.location)
+        self.data = data.to_dict('index')
+
 
     def erase_folders(self, folder):
         ''' this ensure that data inside the folder are erase before the program add new files
@@ -141,7 +144,7 @@ class CreatedReport:
         
         square = '\u25A2'
     
-        ws['A9'] = square+ ' Fall Protection:'
+        ws['A9']  = square+ ' Fall Protection:'
         ws['A11'] = square+ ' Control Access Zone:'
         ws['A13'] = square+ ' Proper use of pneumatic tools'
         ws['A15'] = square+ ' Safety of Handset Forms installation.'
@@ -211,11 +214,11 @@ class CreatedReport:
 
     def general_style(self, ws):
 
-        ws.column_dimensions['A'].width = 10
-        ws.column_dimensions['B'].width = 25
+        ws.column_dimensions['A'].width = 20
+        ws.column_dimensions['B'].width = 20
         ws.column_dimensions['C'].width = 3
         ws.column_dimensions['D'].width = 13
-        ws.column_dimensions['E'].width = 20
+        ws.column_dimensions['E'].width = 30
 
         for y in range(6, 42):  # this is to format the body rows
             ws.row_dimensions[y].height = 13
@@ -226,7 +229,7 @@ class CreatedReport:
     def convert_path_to_linux(self, device):
         ''' for linux system, saving files with no space is better.
         this clean the name of files before there are save.'''
-        
+
         device = device.strip()
         device = device.replace(' ', '_')
         device = device.replace(',', "")
@@ -258,7 +261,7 @@ def convert_to_pdf(location):
     for x in list_file_names:
         fullname = os.path.abspath(os.path.join(file_dir, x))
         print(fullname)
-        os.system(f'libreoffice --convert-to pdf {fullname} --outdir {file_dir}')
+        os.system(f'"C:\Program Files\LibreOffice\program\soffice.bin"  --convert-to pdf {fullname} --outdir {file_dir}')
 
 
 if __name__ == "__main__":
@@ -269,6 +272,4 @@ if __name__ == "__main__":
         active = CreatedReport(data=data, location=location)
         active.run()
         convert_to_pdf(location=location)
-
-
-    
+        send_email(location)
