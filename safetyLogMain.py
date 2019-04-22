@@ -134,7 +134,8 @@ class CreatedReport:
         -gets: ws-openpyxl page activated, employees_list -  list of names of employees
         -return: count - int, name_location[0] - string '''
 
-    
+        total_entrys = 42 if len(employees_list) < 36 else (len(employees_list)-36) + 42
+
         # --------------------------------- right column  ---------------------------------------------------
         ws.merge_cells("A5:B8")
         ws['A5'] = '''SAFETY DISCUSSION
@@ -160,7 +161,7 @@ class CreatedReport:
         ws['A35'] = square+ ' Unusual Weather Conditions.'
 
 
-        for x in range(9, 42):
+        for x in range(9, total_entrys):
             ws.merge_cells(f"A{x}:B{x}")
             ws[f'A{x}'].border = self.full_border()
 
@@ -172,7 +173,7 @@ class CreatedReport:
         ws['E5'].border = self.full_border()
 
         number = 1
-        for y in range(6, 42):
+        for y in range(6, total_entrys):
             ws.merge_cells(f'D{y}:E{y}')
             ws[f'D{y}'].border = self.full_border()
             ws[f'C{y}'].border = self.full_border()
@@ -246,7 +247,7 @@ class CreatedReport:
         for device, list_of_employees in dict_data.items():
             wb = openpyxl.Workbook()
             ws = wb.active
-            name_for_out = "{}".format(os.path.join(DIR_PATH, os.path.join(f"{self.location}", f'{self.convert_path_to_linux(device)}.xlsx')))
+            name_for_out = "{}".format(os.path.join(DIR_PATH, os.path.join(f"{self.location}", f'{self.convert_path_to_linux(str(device))}.xlsx')))
             count, name_location = self.body(ws=ws, employees_list=list_of_employees)
             self.heather(ws=ws, device=device, attendees=count, location=name_location)
             self.footer(attendees= count, ws=ws)
