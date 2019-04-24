@@ -52,5 +52,5 @@ class SendMail:
 
 if __name__ == '__main__':
 
-    print('This is only to be used from the EmployeesMissing.py')
+    print('This is only to be used from the SafetyLogMain.py')
     input('')

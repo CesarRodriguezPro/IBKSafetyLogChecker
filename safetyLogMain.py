@@ -56,7 +56,6 @@ class CreatedReport:
         self.erase_folders(self.location)
         self.data = data.to_dict('index')
 
-
     def erase_folders(self, folder):
         ''' this ensure that data inside the folder are erase before the program add new files
         - get: folder name - string '''
