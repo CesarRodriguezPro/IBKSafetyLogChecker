@@ -8,7 +8,7 @@ root_dir = os.path.abspath(os.path.dirname(__file__))
 emails = {
      '511': ['511e86@ibkconstructiongroup.com', 'sg@ibkconstructiongroup.com'],
      '262': ['dk@ibkconstructiongroup.com', 'vb@ibkconstructiongroup.com', '262kent@ibkconstructiongroup.com', 'andriy-oleg@yahoo.com'],
-     '28': ['tm@ibkconstructiongroup.com', '161e28@ibkconstructiongroup.com'],
+     '161': ['tm@ibkconstructiongroup.com', '161e28@ibkconstructiongroup.com'],
      '199': ['199mineola@ibkconstructiongroup.com'],
      'manager': ['patricks@ibkconstructiongroup.com', 'ds@ibkconstructiongroup.com', 'yd@ibkconstructiongroup.com'],
      'office': ['timurp@ibkconstructiongroup.com', 'lilianas@ibkconstructiongroup.com']}
@@ -35,7 +35,3 @@ def send_email(location):
 if __name__ == "__main__":
     print('Only to be use with SafetyLogMain.py ')
     input('')
-
-    # test_location = '262 199 28 511'.split()
-    # for location in test_location:
-    #     send_email(location=location)

@@ -12,7 +12,7 @@ with open('TimeStation_Key.txt', 'r') as open_file:
 CODE = 37
 URL = 'https://api.mytimestation.com/v0.1/reports/?api_key={}&id={}&exportformat=csv'.format(API_KEY, CODE)
 today = datetime.datetime.today()
-LIST_LOCATIONS = '262 511 28 199'.split()
+LIST_LOCATIONS = '262 511 161 199'.split()
 ############################################################
 
 
@@ -158,6 +158,7 @@ class CreatedReport:
         ws['A31'] = square+ ' Safety of Rebar installation.'
         ws['A33'] = square+ ' Safety of Hosting and Lifting.'
         ws['A35'] = square+ ' Unusual Weather Conditions.'
+        
 
 
         for x in range(9, total_entrys):
