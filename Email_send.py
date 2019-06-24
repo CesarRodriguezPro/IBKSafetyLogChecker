@@ -24,7 +24,7 @@ class SendMail:
         msg['From'] = self.emailUser
         msg['To'] = ', '.join(map(str, self.to))
         msg['Cc'] = ', '.join(map(str, self.cc))
-        msg['Subject'] = "Automatic Report for TimeStation"
+        msg['Subject'] = "Daily Safety Meeting"
 
         body = message
         msg.attach(MIMEText(body, 'plain'))
