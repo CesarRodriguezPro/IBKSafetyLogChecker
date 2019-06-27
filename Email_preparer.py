@@ -7,12 +7,12 @@ root_dir = os.path.abspath(os.path.dirname(__file__))
 
 emails = {
      '511': ['511e86@ibkconstructiongroup.com', 'sg@ibkconstructiongroup.com'],
-     '225': ['rr@ibkconstructiongroup.com'],
-     '262': ['dk@ibkconstructiongroup.com', 'vb@ibkconstructiongroup.com', '262kent@ibkconstructiongroup.com'],
+     '225': ['rr@ibkconstructiongroup.com','dk@ibkconstructiongroup.com'],
+     '262': ['vb@ibkconstructiongroup.com', '262kent@ibkconstructiongroup.com'],
      '161': ['tm@ibkconstructiongroup.com', '161e28@ibkconstructiongroup.com'],
      '199': ['199mineola@ibkconstructiongroup.com'],
      '300': ['vb@ibkconstructiongroup.com'],
-     'manager': ['patricks@ibkconstructiongroup.com', 'ds@ibkconstructiongroup.com', 'yd@ibkconstructiongroup.com'],
+     'manager': ['patricks@ibkconstructiongroup.com', 'ds@ibkconstructiongroup.com', 'yd@ibkconstructiongroup.com','josephb@ibkconstructiongroup.com'],
      'office': ['timurp@ibkconstructiongroup.com', 'lilianas@ibkconstructiongroup.com'],
      }
 

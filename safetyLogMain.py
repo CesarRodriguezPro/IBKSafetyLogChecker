@@ -12,7 +12,7 @@ with open('TimeStation_Key.txt', 'r') as open_file:
 CODE = 37
 URL = 'https://api.mytimestation.com/v0.1/reports/?api_key={}&id={}&exportformat=csv'.format(API_KEY, CODE)
 today = datetime.datetime.today()
-LIST_LOCATIONS = '262 511 161 199 300 225'.split()
+LIST_LOCATIONS = '511 225 262 161 199 300'.split()
 ############################################################
 
 
