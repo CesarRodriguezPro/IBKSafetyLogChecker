@@ -9,10 +9,12 @@ from Email_preparer import send_email
 ######################## settings ##########################
 with open('TimeStation_Key.txt', 'r') as open_file:
     API_KEY = open_file.read()
-CODE = 37 # current Status
+CODE = 37
 URL = 'https://api.mytimestation.com/v0.1/reports/?api_key={}&id={}&exportformat=csv'.format(API_KEY, CODE)
 today = datetime.datetime.today()
 LIST_LOCATIONS = '161 300 262 1230 '.split()
+
+
 ############################################################
 
 
@@ -31,26 +33,8 @@ def open_file(path):
 ###########################################################
 
 
-
-class CheckOsha:
-    ''' this read a excel file with the names and the dates in which the osha 30 hours expire 
-    and compare with the names that are working at this moment '''
-
-    def __init__(self):
-        self.raw_data = pd.read_excel('osha30.xlsx')
-        self.DB_data  = self.raw_data[~self.raw_data['OSHA-30exp'].isna()]
-
-    def check_employee(self,name):
-        info = self.DB_data[self.DB_data['Employee name'].str.contains(name)]['OSHA-30exp']
-        if info.empty:
-            return ''
-        else:
-            for date in info.to_dict().values():
-                return date.strftime("%Y-%m-%d")
-
-
 class GettingDataForReport:
-    ''' this gets the information for timestation Server using pandas to get request
+    ''' this gets the informatin for timestation Server using pandas to get request 
     - gets =  data from timestation 
     - returns = pandas dataframe with names filtered by location '''
 
@@ -58,17 +42,11 @@ class GettingDataForReport:
         self.URL = URL
         self.raw_current = pd.read_csv(self.URL)
         self.current_in = self.raw_current[self.raw_current['Status'].str.contains('In')]
+
     
     def run(self, location): 
         filter_data = self.current_in[self.current_in['Current Department'].str.contains(location)]
         return filter_data
-
-    def get_list_locations(self):
-        locations = self.current_in.groupby(['Current Department']).all()
-        names = locations.to_dict()
-        list_locations = [x for x in names.values()]
-        for x in list_locations:
-            print(x)
 
     def total_employees(self, location):
         filter_data = self.current_in[self.current_in['Current Department'].str.contains(location)]
@@ -103,22 +81,14 @@ class CreatedReport:
                               top=Side(border_style='thin'), bottom=Side(border_style='thin'))
         return border_style
 
-    def right_border(self):
-        border_style = Border(right=Side(border_style='thin'))
-        return border_style
-
     def heather(self, ws, device, location, attendees=0):
         ''' format the heather of the page that will be created 
         -gets: Device(foreman name)-string, location-string, attendees-int '''
         
-        ws.merge_cells("A1:F1")
+        ws.merge_cells("A1:E1")
         ws.merge_cells("C2:D2")
         ws.merge_cells("C3:D3")
         ws.merge_cells("C4:D4")
-
-        ws.merge_cells("E2:F2")
-        ws.merge_cells("E3:F3")
-        ws.merge_cells("E4:F4")
 
         ws['A1'] = "PRE-SHIFT SAFETY MEETING"
         ws['A2'] = "Project"
@@ -128,7 +98,6 @@ class CreatedReport:
         ws['C2'] = "Date/Time"
         ws['C3'] = "Number of Attendees"
         ws['C4'] = "Foreman:"
-
 
         ws['B2'] = f'{location}'.title()
         ws['E2'] = f"{datetime.datetime.today().strftime('%m/%d/%Y')} 7:00 AM"
@@ -140,7 +109,6 @@ class CreatedReport:
         ws['A1'].alignment = Alignment(horizontal='center')
         rd = ws.row_dimensions[1]
         rd.height = 25
-    
 
         ws['B2'].font = Font(bold=True)
         ws['E3'].font = Font(size=14)
@@ -151,11 +119,6 @@ class CreatedReport:
 
         ws['E1'].border = self.full_border()
         ws['A1'].border = self.full_border()
-        ws['F1'].border = self.right_border()
-        ws['F2'].border = self.right_border()
-        ws['F3'].border = self.right_border()
-        ws['F4'].border = self.right_border()
-
         ws['A2'].border = self.full_border()
         ws['A3'].border = self.full_border()
         ws['A4'].border = self.full_border()
@@ -216,9 +179,7 @@ class CreatedReport:
         ws['C5'] = 'List of Attendees'
         ws['C5'].alignment = Alignment(horizontal='center')
         ws['C5'].border = self.full_border()
-        ws['F5'] = 'Exp Osha 30H'
-        ws['F5'].border = self.full_border()
-       
+        ws['E5'].border = self.full_border()
 
         number = 1
         for y in range(6, total_entrys):
@@ -226,16 +187,11 @@ class CreatedReport:
             ws[f'D{y}'].border = self.full_border()
             ws[f'C{y}'].border = self.full_border()
             ws[f'E{y}'].border = self.full_border()
-            ws[f'F{y}'].border = self.full_border()
             ws[f'C{y}'] = number
             number += 1
 
-        check_osha = CheckOsha()
         for row, items in enumerate(employees_list, 6):
-
-            Osha_expiration = check_osha.check_employee(items[0])
-            ws[f'F{row}'] = f' {Osha_expiration}'
-            ws[f'D{row}'] = f' {items[0].title()}'
+            ws[f'D{row}'] = items[0].title()
         # ---------------------------------------------------------------------------------------------------------
 
         count = len(employees_list)
@@ -251,14 +207,13 @@ class CreatedReport:
 
         for y in range(start_row, (start_row + 5)):
             ws.merge_cells(f'A{y}:B{y}')
-            ws.merge_cells(f'C{y}:F{y}')
+            ws.merge_cells(f'C{y}:E{y}')
 
             ws[f'A{y}'].alignment = Alignment(horizontal='center')
             ws[f'C{y}'].alignment = Alignment(horizontal='center')
             ws[f'A{y}'].border = self.full_border()
             ws[f'C{y}'].border = self.full_border()
             ws[f'E{y}'].border = self.full_border()
-            ws[f'F{y}'].border = self.right_border()
 
         ws[f'A{start_row}'] = 'WORKSIDE HAZARD'
         ws[f'C{start_row}'] = 'PLAN TO ELIMINATE'
@@ -273,8 +228,7 @@ class CreatedReport:
         ws.column_dimensions['B'].width = 20
         ws.column_dimensions['C'].width = 3
         ws.column_dimensions['D'].width = 13
-        ws.column_dimensions['E'].width = 17
-        ws.column_dimensions['F'].width = 13
+        ws.column_dimensions['E'].width = 30
 
         for y in range(6, 42):  # this is to format the body rows
             ws.row_dimensions[y].height = 13
@@ -320,10 +274,12 @@ def convert_to_pdf(location):
         os.system(f'"C:\Program Files\LibreOffice\program\soffice.bin"  --convert-to pdf {fullname} --outdir {file_dir}')
 
 
-def main_function():
-            
+if __name__ == "__main__":
+
+
     getting_data = GettingDataForReport()
     for location in LIST_LOCATIONS:
+
         try:
             data = getting_data.run(location=location)
             total_employees = getting_data.total_employees(location=location)
@@ -338,9 +294,4 @@ def main_function():
             except:
                 print("there was a problem with converting documents to PDF")
         except:
-            print("Problem Downloading Information")
-    input('')
-
-
-if __name__ == "__main__":
-    main_function()
+            print("Problem Downloading Infomation")

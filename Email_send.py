@@ -16,7 +16,7 @@ class SendMail:
         self.cc = cc
         self.list_pdf = list_pdf
 
-    def run(self):
+    def run(self, total_employees):
         with open('message.txt', 'r') as message_file:
             message = message_file.read()
 
@@ -24,7 +24,7 @@ class SendMail:
         msg['From'] = self.emailUser
         msg['To'] = ', '.join(map(str, self.to))
         msg['Cc'] = ', '.join(map(str, self.cc))
-        msg['Subject'] = "Daily Safety Meeting"
+        msg['Subject'] = f"Daily Safety Meeting Total Of Employees are {total_employees}"
 
         body = message
         msg.attach(MIMEText(body, 'plain'))
