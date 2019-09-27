@@ -8,10 +8,10 @@ import datetime, smtplib, os
 class SendMail:
 
     def __init__(self, to, cc, list_pdf):
-        self.user_name = 'cesarr'
-        self.user_password = 'SuperConcrete01'
+        self.user_name = 'ibk.cesarrodriguez@gmail.com'
+        self.user_password = 'lore718ibk'
         self.today = datetime.datetime.today().strftime('%m/%d/%Y')
-        self.emailUser = "cesarr@ibkconstructiongroup.com"
+        self.emailUser = "ibk.cesarrodriguez@gmail.com"
         self.to = to
         self.cc = cc
         self.list_pdf = list_pdf
@@ -41,7 +41,7 @@ class SendMail:
                 except:
                     print("could not attache file")
 
-        server = smtplib.SMTP('smtp.ibkconstructiongroup.com')
+        server = smtplib.SMTP('smtp.gmail.com')
         server.starttls()
         server.login(self.user_name, password=self.user_password)
         text = msg.as_string()

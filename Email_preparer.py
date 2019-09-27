@@ -14,12 +14,14 @@ emails = {
      '300': ['vb@ibkconstructiongroup.com'],
      '123': ['alexo@rcsrebar.com'],
      '215': ['225w28@ibkconstructiongroup.com'],
-     '1230': ['vb@ibkconstructiongroup.com'],
+     '1230': ['vb@ibkconstructiongroup.com', '123madison@ibkconstructiongroup.com'],
      'manager': [ 'ds@ibkconstructiongroup.com', 'yd@ibkconstructiongroup.com','josephb@ibkconstructiongroup.com'],
      'office': ['timurp@ibkconstructiongroup.com', 'lilianas@ibkconstructiongroup.com'],
      }
 
-cc = ['cesarr@ibkconstructiongroup.com'] + emails['manager'] + emails['office']
+# cc = ['cesarr@ibkconstructiongroup.com'] + emails['manager'] + emails['office']
+cc = ['timurp@ibkconstructiongroup.com']
+
 # ------------------------------------------------------------------------------------------------------------------
 
 
@@ -33,7 +35,8 @@ def send_email(location, total_employees):
         if names[-4:] == '.pdf':
             pdf_path = os.path.join(files_dir, names)
             list_pdf.append(pdf_path)
-    to = emails[location]
+    # to = emails[location]
+    to = ['cesarr@ibkconstructiongroup.com']
     active = SendMail(to=to, cc=cc, list_pdf=list_pdf)
     active.run(total_employees=total_employees)
 
